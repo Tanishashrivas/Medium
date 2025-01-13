@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     return BadRequestError("User doesn't exist")({});
   }
 
-  const valid = await bcrypt.compare(password, user.password || "");
+  const valid = await bcrypt.compare(password, user.password);
 
   if (!valid) {
     return ValidationError("Invalid password")({});
