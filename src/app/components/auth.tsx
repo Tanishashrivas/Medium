@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { LabelledInput } from "@/app/components/ui/labelled-input";
 import axios from "axios";
 import Link from "next/link";
-import { LabelledInput } from "@/app/components/ui/labelled-input";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface SignupInput {
   name: string;
@@ -41,7 +41,9 @@ export const Auth: React.FC<AuthProps> = ({ type }) => {
 
       const response = await axios.post(`api/v1/user/${type}`, body);
 
-      localStorage.setItem("token", response.data.token);
+      const token: string = response?.data?.data?.token;
+
+      localStorage.setItem("token", token);
       router.push("/blog");
     } catch (error) {
       setError("An error occurred. Please try again.");

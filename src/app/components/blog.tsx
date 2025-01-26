@@ -1,41 +1,24 @@
 "use client";
 
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/app/components/ui/card";
-import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/app/components/ui/avatar";
 import { Button } from "@/app/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/app/components/ui/card";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { fetchBlogs } from "./hooks/getBlogs";
 
 export function BlogsPage() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      router.push("/signin");
-    } else {
-      setIsLoading(false);
-    }
-  }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
+  const [blogPosts, setBlogPosts] = useState([]);
   const blogs = [
     {
       id: 1,
@@ -48,84 +31,119 @@ export function BlogsPage() {
         description: "Historian of all things funny and witty",
       },
       date: "August 24, 2023",
+      readTime: "5 min read",
+      likes: 142,
+      comments: 28,
     },
     {
       id: 2,
       title: "The Future of AI Development",
       excerpt:
-        "Exploring the latest trends in artificial intelligence and what it means for developers.",
+        "Exploring the latest trends in artificial intelligence and what it means for developers. From machine learning to neural networks, we dive deep into the technologies shaping our future.",
       author: {
         name: "Alex Chen",
         avatar: "/placeholder.svg",
-        role: "AI Researcher",
+        description: "AI Researcher and Tech Enthusiast",
       },
       date: "Dec 15, 2023",
-      readTime: "5 min read",
+      readTime: "8 min read",
+      likes: 89,
+      comments: 15,
     },
-    // Add more blog posts as needed
   ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchBlogs();
+
+      if (data) {
+        setBlogPosts(data);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log(blogPosts);
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Blogs</h1>
-        <div>
-          <Button variant="outline" className="mr-2">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Blogs</h1>
+        <div className="space-x-2">
+          <Button variant="outline" className="text-sm">
             For you
           </Button>
-          <Button variant="outline">Following</Button>
+          <Button variant="outline" className="text-sm">
+            Following
+          </Button>
         </div>
       </div>
-      <div className="space-y-8">
+      <div className="grid gap-8 xl:grid-cols-2">
         {blogs.map((blog) => (
-          <article
-            key={blog.id}
-            className="border-b pb-8 bg-gray-800 border-gray-700 hover:border-purple-500 transition-all"
-          >
-            <div className="flex items-center space-x-4 mb-4">
-              <Image
-                src={blog.author.avatar}
-                alt={blog.author.name}
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
-              <div>
-                <h3 className="font-semibold text-white">{blog.author.name}</h3>
-                <p className="text-sm text-gray-400">
-                  {blog.author.description || blog.author.role}
-                </p>
+          <Card key={blog.id} className="flex flex-col">
+            <CardHeader>
+              <div className="flex items-center space-x-4">
+                <Avatar>
+                  <AvatarImage
+                    src={blog.author.avatar}
+                    alt={blog.author.name}
+                  />
+                  <AvatarFallback>{blog.author.name[0]}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-sm font-medium">{blog.author.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {blog.author.description}
+                  </p>
+                </div>
               </div>
-            </div>
-            <h2 className="text-xl font-bold mb-2 text-white">{blog.title}</h2>
-            <p className="text-gray-300 mb-4">{blog.excerpt}</p>
-            <div className="flex justify-between items-center text-sm text-gray-400">
-              <span>{blog.date}</span>
-              <div className="space-x-4">
+            </CardHeader>
+            <CardContent className="flex-grow">
+              <Link href={`/blog/${blog.id}`} className="group">
+                <h2 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+                  {/* {blog.title} */}
+                </h2>
+              </Link>
+              <p className="text-muted-foreground text-sm line-clamp-3">
+                {blog.excerpt}
+              </p>
+            </CardContent>
+            <CardFooter className="flex justify-between items-center text-sm text-muted-foreground">
+              <div className="flex items-center space-x-4">
+                <span>{blog.date}</span>
+                <span>{blog.readTime}</span>
+              </div>
+              <div className="flex items-center space-x-2">
                 <Button
                   variant="ghost"
-                  size="sm"
-                  className="text-gray-400 hover:text-white"
+                  size="icon"
+                  className="hover:text-primary"
                 >
-                  <Heart className="w-4 h-4" />
+                  <Heart className="h-4 w-4" />
+                  <span className="sr-only">Like</span>
                 </Button>
+                <span>{blog.likes}</span>
                 <Button
                   variant="ghost"
-                  size="sm"
-                  className="text-gray-400 hover:text-white"
+                  size="icon"
+                  className="hover:text-primary"
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  <MessageCircle className="h-4 w-4" />
+                  <span className="sr-only">Comment</span>
                 </Button>
+                <span>{blog.comments}</span>
                 <Button
                   variant="ghost"
-                  size="sm"
-                  className="text-gray-400 hover:text-white"
+                  size="icon"
+                  className="hover:text-primary"
                 >
-                  <Share2 className="w-4 h-4" />
+                  <Share2 className="h-4 w-4" />
+                  <span className="sr-only">Share</span>
                 </Button>
               </div>
-            </div>
-          </article>
+            </CardFooter>
+          </Card>
         ))}
       </div>
     </div>

@@ -1,0 +1,18 @@
+- bind in try-catch block and handle error responss like bad response in frontend.
+- in blogs file:  data is static + table has very less fields, we gota fix that
+- supabase and google auth and check whether email even exists or not.
+- expand tables like date, minutes read and other things
+- Profile dropdown: change signup title in nav to profile and dropdown.
+- published option in blog?
+- dynamic like, share, comment: we need to make tables and relations between them, endpoints, and then fetch them.
+
+
+
+
+// ISSUES
+- suppose im typing somethig and then i click somewhere else, the cursor should dissapear right? it keeps blinking there but doesn't type anything until i click back inside the box
+
+
+
+// Futurely features?
+- Live cursor just like google docs and remote access to people for editing? if possible 
