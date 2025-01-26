@@ -1,4 +1,4 @@
-import { Blog as BlogComponent } from "../components/blog";
+import { BlogsPage as BlogComponent } from "../components/blog";
 
 export default function Blog() {
   return <BlogComponent />;
