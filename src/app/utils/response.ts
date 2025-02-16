@@ -18,13 +18,13 @@ export const BadRequestError = (message: string) => (data: unknown) => {
   );
 };
 
-export const ValidationError = (message: string) => (data: unknown) => {
+export const InternalServerError = (message: string) => (data: unknown) => {
   return new Response(
     JSON.stringify({
       message: message || "",
       data: data || {},
     }),
-    { status: 400, headers: { "Content-Type": "application/json" } }
+    { status: 500, headers: { "Content-Type": "application/json" } }
   );
 };
 

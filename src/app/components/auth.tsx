@@ -1,10 +1,13 @@
 "use client";
 
-import { LabelledInput } from "@/app/components/ui/labelled-input";
-import axios from "axios";
+import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import axios from "axios";
+import github from "@/app/assets/github.jpg";
+import google from "@/app/assets/google.webp";
+import { LabelledInput } from "@/app/components/ui/labelled-input";
 
 interface SignupInput {
   name: string;
@@ -30,6 +33,10 @@ export const Auth: React.FC<AuthProps> = ({ type }) => {
       ...postInputs,
       [field]: value,
     });
+  };
+
+  const handleOAuth = async () => {
+    router.push("/api/v1/user/auth");
   };
 
   const sendRequest = async () => {
@@ -98,6 +105,31 @@ export const Auth: React.FC<AuthProps> = ({ type }) => {
               className="mt-8 w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5"
             >
               {type === "signup" ? "Sign up" : "Sign in"}
+            </button>
+          </div>
+
+          <div className="flex gap-4 mt-4">
+            <button
+              className="flex gap-2 items-center text-white bg-blue-950 hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5"
+              onClick={handleOAuth}
+            >
+              <Image
+                src={google}
+                alt="google"
+                className="w-4 h-4 rounded-full"
+              />
+              {type === "signup" ? "Sign up" : "Sign in"} with Google
+            </button>
+            <button
+              className="flex gap-2 items-center text-white bg-blue-950 hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5"
+              onClick={handleOAuth}
+            >
+              <Image
+                src={github}
+                alt="github"
+                className="w-5 h-5 rounded-full"
+              />
+              {type === "signup" ? "Sign up" : "Sign in"} with Github
             </button>
           </div>
         </div>

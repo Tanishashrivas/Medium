@@ -14,11 +14,15 @@ import {
 } from "@/app/components/ui/card";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchBlogs } from "./hooks/getBlogs";
 
 export function BlogsPage() {
+  const router = useRouter();
   const [blogPosts, setBlogPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const blogs = [
     {
       id: 1,
@@ -53,6 +57,14 @@ export function BlogsPage() {
   ];
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.push("/signin");
+    } else {
+      setIsLoading(false);
+    }
+
     const fetchData = async () => {
       const data = await fetchBlogs();
 
@@ -65,6 +77,10 @@ export function BlogsPage() {
   }, []);
 
   console.log(blogPosts);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">

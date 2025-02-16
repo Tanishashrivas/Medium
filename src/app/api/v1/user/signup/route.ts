@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   });
 
   const token = await jwt.sign({ id: user.id }, secret!, {
-    expiresIn: "1h",
+    expiresIn: "7d",
   }); //non-null assertion (!) that suggests that the variable is defined, it bypasses TypeScript's type safety.
 
   return Ok("User signed up successfully")({

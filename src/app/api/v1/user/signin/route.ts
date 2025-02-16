@@ -1,5 +1,5 @@
 import { prisma } from "@/app/utils/prisma-client";
-import { BadRequestError, Ok, ValidationError } from "@/app/utils/response";
+import { BadRequestError, Ok } from "@/app/utils/response";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import type { NextRequest } from "next/server";
@@ -26,11 +26,11 @@ export async function POST(request: NextRequest) {
   const valid = await bcrypt.compare(password, user.password);
 
   if (!valid) {
-    return ValidationError("Invalid password")({});
+    return BadRequestError("Invalid password")({});
   }
 
   const token = await jwt.sign({ id: user.id }, secret!, {
-    expiresIn: "2h",
+    expiresIn: "7d",
   }); //non-null assertion (!) that suggests that the variable is defined, it bypasses TypeScript's type safety.
 
   return Ok("User signed in successfully")({
